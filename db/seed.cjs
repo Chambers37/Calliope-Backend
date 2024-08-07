@@ -49,7 +49,7 @@ const createTables = async() => {
   }
 }
 
-const numIds = 5;
+const numIds = 50;
 
 const syncAndSeed = async() => {
 

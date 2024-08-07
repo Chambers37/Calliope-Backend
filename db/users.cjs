@@ -38,10 +38,24 @@ const seedUsers = async(numUsers) => {
 
     await createUser(username, email, password);
   }
+};
+
+const getReviewsById = async(userID) => {
+  try {
+    const { rows } = await client.query(`
+      SELECT * FROM reviews WHERE user_id=$1; 
+    `, [userID]);
+    return rows;
+  } catch (error) {
+    console.log('Error getting reviews for user by id - users.cjs', error);
+    throw error;
+  }
 }
+
 
 module.exports = {
   createUser,
   seedUsers,
-  getRandomString
+  getRandomString,
+  getReviewsById
 }

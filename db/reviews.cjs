@@ -25,11 +25,7 @@ const seedReviews = async(numIds) => {
       let product_id = j;
 
       const rating = (Math.floor(Math.random() * 99) + 1) / 10; 
-      const review_text = `
-      ${getRandomString()}${getRandomString()} ${getRandomString()} 
-      ${getRandomString()}  ${getRandomString()}${getRandomString()}
-      ${getRandomString()} ${getRandomString()} ${getRandomString()}
-      `;
+      const review_text = `${getRandomString()} ${getRandomString()} ${getRandomString()}${getRandomString()} ${getRandomString()}`;
 
       await createReview(user_id, product_id, rating, review_text)
     }

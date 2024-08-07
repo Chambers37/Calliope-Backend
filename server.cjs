@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const client  = require('./db/client.cjs');
 const { getAllProducts } = require('./db/products.cjs')
+const { getReviewsById } = require('./db/users.cjs')
 
 const app = express();
 const PORT = process.env.PORT;
@@ -37,6 +38,20 @@ app.get('/api/v1/products/:id', async(req, res) => {
     throw error;
   }
 });
+
+// Get all reviewws from single user by ID
+app.get('/api/v1/users/:id/reviews', async(req, res) => {
+  const userID = req.params.id;
+
+  try {
+    const result = await getReviewsById(userID);
+    console.log(result);
+    res.send(result)
+  } catch (error) {
+    console.log('Error getting reviews for user by id - server.cjs', error);
+    throw error;
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`)
