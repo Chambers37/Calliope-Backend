@@ -3,7 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const client  = require('./db/client.cjs');
 const { getAllProducts } = require('./db/products.cjs')
+const { createReview } = require('./db/reviews.cjs')
 const { getReviewsByToken, createUser, userLogin } = require('./db/users.cjs')
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -91,6 +93,37 @@ app.post('/api/v1/users/login', async(req, res) => {
     throw error;
   }
 });
+
+// User writes a review
+app.post('/api/v1/reviews', async(req, res) => {
+  const token = req.headers.auth;
+  const { productId, reviewText, rating } = req.body;
+
+  if (token) {
+    try {
+      
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id; 
+
+      const newReview = await createReview(userId, productId, rating, reviewText);
+      console.log('New REVIEW ADDED!', newReview)
+      res.send(newReview);
+      
+    } catch (error) {
+      console.log('Error creating new review - server.cjs', error);
+    }
+  } else {
+    console.log('You need to login first');
+    res.send('You need to login first') 
+  }
+});
+
+
+// User Edits a review
+
+
+
+// User Deletes a review
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`)
