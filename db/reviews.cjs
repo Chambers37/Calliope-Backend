@@ -4,10 +4,12 @@ const { getRandomString } = require('./users.cjs')
 
 const createReview = async (userId, productId, rating, reviewText) => {
   try {
-    await client.query(`
-      INSERT INTO reviews (user_id, product_id, rating, review_text)
-      VALUES ($1, $2, $3, $4)
-    `, [userId, productId, rating, reviewText]);
+    const { rows } = await client.query(`
+        INSERT INTO reviews (user_id, product_id, rating, review_text)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;
+      `, [userId, productId, rating, reviewText]);
+      return rows[0]
   } catch (error) {
     console.log('Error creating review - reviews.cjs', error);    
     throw error;
