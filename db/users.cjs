@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const client = require('./client.cjs')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const getRandomString = () => {
   const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -56,8 +57,31 @@ const getReviewsById = async(userID) => {
   }
 };
 
-const userLogin = async() => {
+const userLogin = async(email, password) => {
+  try {
+    const result = await client.query(`
+      SELECT * FROM users WHERE email=$1;
+    `,[email]);
 
+    const user = result.rows[0]
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
+      const token = jwt.sign(
+        {id: user.id, username: user.username, email: user.email},
+        process.env.JWT_SECRET)
+  
+        return token;
+    } else {
+      throw new Error('Invalid credentials');
+    }
+
+
+  } catch (error) {
+    console.log('Error with user login - users.cjs', error);
+      throw error;
+  }
 }
 
 
