@@ -42,15 +42,14 @@ app.get('/api/v1/products/:id', async(req, res) => {
 // Get all reviews from single user by ID
 app.get('/api/v1/users/:id/reviews', async(req, res) => {
   const userID = req.params.id;
-
-  try {
-    const result = await getReviewsById(userID);
-    console.log(result);
-    res.send(result)
-  } catch (error) {
-    console.log('Error getting reviews for user by id - server.cjs', error);
-    throw error;
-  }
+    try {
+      const result = await getReviewsById(userID);
+      console.log(result);
+      res.send(result)
+    } catch (error) {
+      console.log('Error getting reviews for user by id - server.cjs', error);
+      throw error;
+    }
 });
 
 // User signup
@@ -73,8 +72,9 @@ app.post('/api/v1/users/login', async(req, res) => {
   const { email, password } = req.body;
 
   try {
-    
-
+    const token = await userLogin(email, password);
+    console.log('User logged in!')
+    res.send(token)
   } catch (error) {
     console.log('Error with user login - server.cjs', error);
     throw error;

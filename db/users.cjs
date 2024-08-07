@@ -74,9 +74,9 @@ const userLogin = async(email, password) => {
   
         return token;
     } else {
+      
       throw new Error('Invalid credentials');
     }
-
 
   } catch (error) {
     console.log('Error with user login - users.cjs', error);
