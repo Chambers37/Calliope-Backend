@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const client  = require('./db/client.cjs');
 const { getAllProducts } = require('./db/products.cjs')
-const { getReviewsById } = require('./db/users.cjs')
+const { getReviewsById, createUser, userLogin } = require('./db/users.cjs')
 
 const app = express();
 const PORT = process.env.PORT;
@@ -39,7 +39,7 @@ app.get('/api/v1/products/:id', async(req, res) => {
   }
 });
 
-// Get all reviewws from single user by ID
+// Get all reviews from single user by ID
 app.get('/api/v1/users/:id/reviews', async(req, res) => {
   const userID = req.params.id;
 
@@ -51,7 +51,35 @@ app.get('/api/v1/users/:id/reviews', async(req, res) => {
     console.log('Error getting reviews for user by id - server.cjs', error);
     throw error;
   }
-})
+});
+
+// User signup
+app.post('/api/v1/users/signup', async(req, res) => {
+  const { username, email, password } = req.body;
+
+  try {
+    const result = await createUser(username, email, password);
+    console.log('User signed up!')
+    res.send(result)
+
+  } catch (error) {
+    console.log('Error with user signup - server.cjs', error);
+    throw error;
+  } 
+});
+
+// User Login
+app.post('/api/v1/users/login', async(req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    
+
+  } catch (error) {
+    console.log('Error with user login - server.cjs', error);
+    throw error;
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`)

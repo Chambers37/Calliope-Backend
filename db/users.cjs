@@ -16,14 +16,18 @@ const createUser = async(username, email, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await client.query(`
+    const { rows } = await client.query(`
       INSERT INTO users (username, email, password)
       VALUES ($1, $2, $3)
-    `, [username, email, hashedPassword]);
+      RETURNING *;
+      `, [username, email, hashedPassword]);
+      
   } catch (error) {
+
     console.log('Error creating user - users.cjs', error);
     throw error;
-  }
+
+  } 
 };
 
 const seedUsers = async(numUsers) => {
@@ -50,6 +54,10 @@ const getReviewsById = async(userID) => {
     console.log('Error getting reviews for user by id - users.cjs', error);
     throw error;
   }
+};
+
+const userLogin = async() => {
+
 }
 
 
@@ -57,5 +65,6 @@ module.exports = {
   createUser,
   seedUsers,
   getRandomString,
-  getReviewsById
+  getReviewsById,
+  userLogin
 }
