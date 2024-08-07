@@ -45,12 +45,18 @@ const seedUsers = async(numUsers) => {
   }
 };
 
-const getReviewsById = async(userID) => {
+const getReviewsByToken = async(token) => {
+
+  const { id } = jwt.verify(token, process.env.JWT_SECRET)
+
   try {
     const { rows } = await client.query(`
       SELECT * FROM reviews WHERE user_id=$1; 
-    `, [userID]);
+    `, [id]);
+
+    // this should be an array of reviews? currently empty no reviews added from user
     return rows;
+    
   } catch (error) {
     console.log('Error getting reviews for user by id - users.cjs', error);
     throw error;
@@ -71,7 +77,7 @@ const userLogin = async(email, password) => {
       const token = jwt.sign(
         {id: user.id, username: user.username, email: user.email},
         process.env.JWT_SECRET)
-  
+        console.log(user.id)
         return token;
     } else {
       
@@ -89,6 +95,6 @@ module.exports = {
   createUser,
   seedUsers,
   getRandomString,
-  getReviewsById,
+  getReviewsByToken,
   userLogin
 }

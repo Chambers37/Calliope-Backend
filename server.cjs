@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const client  = require('./db/client.cjs');
 const { getAllProducts } = require('./db/products.cjs')
-const { getReviewsById, createUser, userLogin } = require('./db/users.cjs')
+const { getReviewsByToken, createUser, userLogin } = require('./db/users.cjs')
 
 const app = express();
 const PORT = process.env.PORT;
@@ -39,17 +39,28 @@ app.get('/api/v1/products/:id', async(req, res) => {
   }
 });
 
-// Get all reviews from single user by ID
-app.get('/api/v1/users/:id/reviews', async(req, res) => {
-  const userID = req.params.id;
+// Get all reviews from single user by token
+app.get('/api/v1/users/reviews', async(req, res) => {
+
+  const token = req.headers.auth;
+
+  if (token) {    
+
     try {
-      const result = await getReviewsById(userID);
-      console.log(result);
-      res.send(result)
+      const result = await getReviewsByToken(token);
+      console.log('you did it!', result);
+      res.send('you did it!')
+
     } catch (error) {
+
       console.log('Error getting reviews for user by id - server.cjs', error);
       throw error;
     }
+
+  } else {
+    console.log('You need to login first');
+    res.send('You need to login first')  
+  }
 });
 
 // User signup
@@ -72,7 +83,7 @@ app.post('/api/v1/users/login', async(req, res) => {
   const { email, password } = req.body;
 
   try {
-    const token = await userLogin(email, password);
+    token = await userLogin(email, password);
     console.log('User logged in!')
     res.send(token)
   } catch (error) {
