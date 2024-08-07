@@ -4,9 +4,9 @@
 ## To-Do
 
 ### Allowed Actions for Any User
-- View all items
-- Observe the details for a reviewed item (like a store, restaurant, product, or book). Specifically, any user can:
-  - Observe the average score or rating of the item.
+- ~~View all items~~
+- ~~Observe the details for a reviewed item (like a store, restaurant, product, or book). Specifically, any user can:~~
+  - ~~Observe the average score or rating of the item.~~
   - Observe any relevant information about the item.
   - The reviews for that item
 - Sign up for an account to allow for a logged-in experience.
